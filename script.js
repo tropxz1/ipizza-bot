@@ -20,7 +20,8 @@ chatForm.addEventListener("submit", async (e) => {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({
-      model: "openrouter/gpt-4o",
+      model: "openai/gpt-4o",
+
       messages: [{ role: "user", content: message }]
     })
   });
