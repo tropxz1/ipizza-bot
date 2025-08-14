@@ -13,22 +13,28 @@ chatForm.addEventListener("submit", async (e) => {
 
   appendMessage("Bot", "Thinking...");
 
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${API_KEY}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      model: "openai/gpt-4o",
+  try {
+    const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${API_KEY}`,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://tropxz1.github.io/ipizza-bot/",
+        "X-Title": "ipizza-bot"
+      },
+      body: JSON.stringify({
+        model: "openai/gpt-4o",
+        messages: [{ role: "user", content: message }]
+      })
+    });
 
-      messages: [{ role: "user", content: message }]
-    })
-  });
-
-  const data = await response.json();
-  const reply = data.choices?.[0]?.message?.content || "Sorry, no response.";
-  updateLastBotMessage(reply);
+    const data = await response.json();
+    const reply = data.choices?.[0]?.message?.content || "Sorry, no response.";
+    updateLastBotMessage(reply);
+  } catch (err) {
+    updateLastBotMessage("Error: Could not reach GPT-4o.");
+    console.error(err);
+  }
 });
 
 function appendMessage(sender, text) {
